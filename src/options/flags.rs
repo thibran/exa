@@ -48,7 +48,7 @@ pub static ACCESSED:   Arg = Arg { short: Some(b'u'), long: "accessed",   takes_
 pub static CREATED:    Arg = Arg { short: Some(b'U'), long: "created",    takes_value: TakesValue::Forbidden };
 pub static TIME_STYLE: Arg = Arg { short: None,       long: "time-style", takes_value: TakesValue::Necessary(Some(TIME_STYLES)) };
 const TIMES: Values = &["modified", "accessed", "created"];
-const TIME_STYLES: Values = &["default", "long-iso", "full-iso", "iso"];
+const TIME_STYLES: Values = &["default", "long-iso", "full-iso", "iso", "hide"];
 
 // optional feature options
 pub static GIT:       Arg = Arg { short: None,       long: "git",      takes_value: TakesValue::Forbidden };

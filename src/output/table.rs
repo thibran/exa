@@ -49,7 +49,11 @@ pub struct Columns {
 }
 
 impl Columns {
-    pub fn collect(&self, actually_enable_git: bool) -> Vec<Column> {
+    pub fn collect(
+        &self,
+        actually_enable_git: bool,
+        time_format_enabled: bool
+    ) -> Vec<Column> {
         let mut columns = Vec::with_capacity(4);
 
         if self.inode {
@@ -74,16 +78,18 @@ impl Columns {
             columns.push(Column::Group);
         }
 
-        if self.time_types.modified {
-            columns.push(Column::Timestamp(TimeType::Modified));
-        }
+        if time_format_enabled {
+            if self.time_types.modified {
+                columns.push(Column::Timestamp(TimeType::Modified));
+            }
 
-        if self.time_types.created {
-            columns.push(Column::Timestamp(TimeType::Created));
-        }
+            if self.time_types.created {
+                columns.push(Column::Timestamp(TimeType::Created));
+            }
 
-        if self.time_types.accessed {
-            columns.push(Column::Timestamp(TimeType::Accessed));
+            if self.time_types.accessed {
+                columns.push(Column::Timestamp(TimeType::Accessed));
+            }
         }
 
         if cfg!(feature="git") && self.git && actually_enable_git {
@@ -285,7 +291,11 @@ pub struct Row {
 
 impl<'a, 'f> Table<'a> {
     pub fn new(options: &'a Options, git: Option<&'a GitCache>, colours: &'a Colours) -> Table<'a> {
-        let columns = options.extra_columns.collect(git.is_some());
+        let time_format_enabled = match &options.time_format {
+            &TimeFormat::Hide => false,
+            _ => true,
+        };
+        let columns = options.extra_columns.collect(git.is_some(), time_format_enabled);
         let widths = TableWidths::zero(columns.len());
 
         Table {

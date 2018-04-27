@@ -271,6 +271,9 @@ impl TimeFormat {
         else if word == "full-iso" {
             Ok(TimeFormat::FullISO)
         }
+        else if word == "hide" {
+            Ok(TimeFormat::Hide)
+        }
         else {
             Err(Misfire::BadArgument(&flags::TIME_STYLE, word.into()))
         }
@@ -463,6 +466,7 @@ mod test {
         test!(iso:       TimeFormat <- ["--time-style", "iso"];       Both => like Ok(TimeFormat::ISOFormat(_)));
         test!(long_iso:  TimeFormat <- ["--time-style=long-iso"];     Both => like Ok(TimeFormat::LongISO));
         test!(full_iso:  TimeFormat <- ["--time-style", "full-iso"];  Both => like Ok(TimeFormat::FullISO));
+        test!(hide:      TimeFormat <- ["--time-style", "hide"];      Both => like Ok(TimeFormat::Hide));
 
         // Overriding
         test!(actually:  TimeFormat <- ["--time-style=default",     "--time-style", "iso"];    Last => like Ok(TimeFormat::ISOFormat(_)));

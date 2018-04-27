@@ -45,6 +45,9 @@ pub enum TimeFormat {
     /// millisecond and includes its offset down to the minute. This too uses
     /// only numbers so doesn’t require any special consideration.
     FullISO,
+
+    /// Hide the timestamp information in the header and file row.
+    Hide
 }
 
 // There are two different formatting functions because local and zoned
@@ -57,6 +60,9 @@ impl TimeFormat {
             TimeFormat::ISOFormat(ref iso)     => iso.format_local(time),
             TimeFormat::LongISO                => long_local(time),
             TimeFormat::FullISO                => full_local(time),
+            TimeFormat::Hide => {
+                unreachable!("time_format_enabled in Table::new should prevent access")
+            }
         }
     }
 
@@ -66,6 +72,9 @@ impl TimeFormat {
             TimeFormat::ISOFormat(ref iso)     => iso.format_zoned(time, zone),
             TimeFormat::LongISO                => long_zoned(time, zone),
             TimeFormat::FullISO                => full_zoned(time, zone),
+            TimeFormat::Hide => {
+                unreachable!("time_format_enabled in Table::new should prevent access")
+            }
         }
     }
 }
